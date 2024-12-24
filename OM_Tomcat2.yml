@@ -1,0 +1,107 @@
+---
+- name: Build ansible inventory
+  hosts: "{{ HOST }}" 
+  gather_facts: yes 
+  become: true 
+  become_user: username
+  vars:
+    tomcat_path: /path
+    logs: /path    
+  tasks:
+    - name: Check if tomcat7_mtxn is deployed
+      stat:
+        path: "/restart.sh"
+      register: tomcat7_deployed
+      ignore_errors: yes
+
+    - name: Check if tomcat8_mtxn is deployed
+      stat:
+        path: "/path"
+      register: tomcat8_deployed
+      ignore_errors: yes
+
+    - name: Stop Tomcat (tomcat7_mtxn)
+      shell: "/path
+      register: tomcat_stop
+      ignore_errors: yes
+      when: tomcat7_deployed.stat.exists
+
+    - name: Stop Tomcat (tomcat8_mtxn)
+      shell: "/path"
+      register: tomcat_stop
+      ignore_errors: yes
+      when: tomcat8_deployed.stat.exists
+
+
+      
+    - name: Find all files except directories
+      find:
+        paths: 
+          - "{{ logs }}"
+          - "{{ logs }}"
+        file_type: file
+      register: files_to_remove
+
+    - name: Remove files
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ files_to_remove.files }}"
+      
+    - name: Check if tomcat7_mtxn is deployed
+      stat:
+        path: "/path
+      register: tomcat7_deployed
+      ignore_errors: yes
+
+    - name: Check if tomcat8_mtxn is deployed
+      stat:
+        path: "/path"
+      register: tomcat8_deployed
+      ignore_errors: yes
+
+    - name: Start Tomcat (tomcat7_mtxn)
+      shell: "nohup /path
+      when: tomcat7_deployed.stat.exists
+
+    - name: Start Tomcat (tomcat8_mtxn)
+      shell: "nohup /path"
+      when: tomcat8_deployed.stat.exists
+
+    - name: Pause for 10 seconds
+      pause:
+        seconds: 10
+    - name: Print hostname
+      command: hostname
+      register: hostname_output
+    - name: Print last 2 lines
+      shell: tail -n 2 {{ logs }}/catalina.out
+      register: tail_output
+    - name: Display output
+      debug:
+        msg: "{{ hostname_output.stdout }}: {{ tail_output.stdout }}"
+    - name: Check Disk Space
+      command: df -h
+      register: disk_space_output
+
+    - name: Check Memory
+      command: free -m
+      register: memory_output
+
+    - name: Check CPU
+      shell: top -bn1 | grep "Cpu(s)"
+      register: cpu_output
+
+    - name: Display Disk Space Information
+      debug:
+        var: disk_space_output.stdout_lines
+
+    - name: Display Memory Information
+      debug:
+        var: memory_output.stdout_lines
+
+    - name: Display CPU Information
+      debug:
+        var: cpu_output.stdout_lines
+
+
