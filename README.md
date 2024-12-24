@@ -1,5 +1,5 @@
 Jenkins file we need to keep on GIT along with ansible playbook and inventory.
-This Tomcat job is used to restart Tomcat for versions 7 and 8. Additionally, it will display the current Tomcat status along with system metrics.
+This Tomcat job is used to restart Tomcat services for versions 7 and 8 before the performance test execution. Additionally, it will display the current Tomcat status along with system metrics.
 
 Job Details:
   Job Name: TomcatRestart
